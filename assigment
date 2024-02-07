@@ -108,6 +108,19 @@ contract Concat {
    function insertStudentMap(address addr,string memory _name,uint256  _roll,uint256  _age) public  {
      mapstudent[addr] = student(_name,_roll,_age);
    }
+
+
+ enum House {Small, Medium, Large}
+    
+    House public currentHouse;
  
+function changeHouse(House _newHouse) public {
+        currentHouse = _newHouse;
+    }
+
+
+
+
 
 }
+
