@@ -1,0 +1,113 @@
+// SPDX-License-Identifier: GPL-3.0
+pragma solidity 0.8.12;
+
+contract Concat {
+    ///state variables////////////////////////////////////
+    uint256[] public ff;
+    
+    ////initialize array with specific
+    uint256[] public fd = new uint256[](5);
+    
+    /// functions /////////////////////////////////////////////////////
+    function concatfunction(string memory _a, string memory _b)
+        public
+        pure
+        returns (string memory)
+    {
+        return string.concat(_a, _b);
+    }
+
+    function compareString(string memory a, string memory b)
+        public
+        pure
+        returns (bool)
+    {
+        if (keccak256(abi.encodePacked(a)) == keccak256(abi.encodePacked(b))) {
+            return true;
+        }
+        return false;
+    }
+
+    function sort(uint256[] memory data) public  pure returns (uint256[] memory) {
+        uint length = data.length;
+        for (uint i = 1; i < length; i++) {
+            uint key = data[i];
+            uint j = i;
+            while (j > 0 && data[j - 1] < key) {
+                data[j] = data[j - 1];
+                j--;
+            }
+            data[j] = key;
+        }
+        return data;
+    }
+
+    function findLargestArray(uint256[] memory a)
+        public
+        pure
+        returns (uint256){
+      return  sort(a)[sort(a).length-1];
+    }
+
+    function reverseArray(uint256[] memory arr) public pure  returns(uint256[] memory ) {
+        return sort(arr);
+    }
+
+    function insertElementInArray(uint256 data) public returns (uint256[] memory) {
+        ff.push(data);
+        return ff;
+    }
+    function returnArray(uint256 index,uint256  data) public returns(uint256[] memory) {
+      fd[index]=data;
+      return fd;
+    }
+
+    struct student{
+      string name;
+      uint256 roll;
+      uint256 age;
+    }
+   
+    student public students;
+    student[] public allStudent;
+
+    function insertStudentDetails(string memory _name,uint256  _roll,uint256  _age) public  {
+      students = student({name:_name,roll:_roll,age:_age});
+    }
+   
+   function viewStudent() public view returns(student memory) {
+    return students;
+   }
+
+   function allStudentDataInsert(string memory _name,uint _roll,uint256 _age) public  {
+    allStudent.push(student(_name,_roll,_age));
+   }
+
+  function getAllStudentData() public view  returns (student[] memory) {
+    return allStudent;
+   }
+ 
+   mapping (address => uint[3]) public marks;
+   
+   function inserMarks(address addr,uint _index,uint subject ) public {
+    marks[addr][_index] = subject; 
+   }
+   function getMarks(address addr) public view  returns(uint[3] memory) {
+    return marks[addr];
+   }
+
+   mapping (uint => string) public mark;
+   function inserMark(uint addr,string memory subject ) public {
+     mark[addr] = subject; 
+   }
+   function getMark(uint addr) public view  returns(string memory) {
+    return mark[addr];
+   }
+
+   mapping (address => student) public mapstudent;
+   function insertStudentMap(address addr,string memory _name,uint256  _roll,uint256  _age) public  {
+     mapstudent[addr] = student(_name,_roll,_age);
+   }
+ 
+
+}
