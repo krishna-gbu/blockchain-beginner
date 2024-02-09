@@ -1,0 +1,88 @@
+// SPDX-License-Identifier: GPL-3.0
+pragma solidity 0.8.12;
+
+contract Twitter {
+    struct Post {
+        string post_content;
+        uint256 timestamp;
+    }
+
+    struct Message {
+        address reciver;
+        string massage_content;
+        uint256 timestamp;
+    }
+
+    mapping(address => Post[]) posts;
+    mapping(address => uint256) public postCount;
+    mapping(address => Message[]) messages;
+    mapping(address => uint256) public messageCount;
+    mapping(address => address[]) following;
+    mapping(address => uint256) public followingCount;
+    mapping(address => mapping(address => bool)) public isFollowing;
+    mapping(address => bool) public isOwner;
+    address owner;
+
+    constructor() {
+        owner = msg.sender;
+    }
+
+    modifier onlyOwner() {
+        require(
+            owner == msg.sender || isOwner[msg.sender],
+            "You are not Owner"
+        );
+        _;
+    }
+
+    modifier exitsOwner() {
+        require(isOwner[msg.sender], "You not in Owner list");
+        _;
+    }
+
+    function addOwner(address addr) public onlyOwner {
+        isOwner[addr] = true;
+    }
+
+    function createPost(string memory _post_content) public onlyOwner {
+        Post memory newPost = Post({
+            post_content: _post_content,
+            timestamp: block.timestamp
+        });
+        posts[msg.sender].push(newPost);
+        postCount[msg.sender]++;
+    }
+
+    function createMessage(address _reciver, string memory _message)
+        public
+        onlyOwner
+    {
+        Message memory newMassage = Message({
+            reciver: _reciver,
+            massage_content: _message,
+            timestamp: block.timestamp
+        });
+        messages[msg.sender].push(newMassage);
+        messageCount[msg.sender]++;
+    }
+
+    function addfollowing(address addr) public onlyOwner {
+        if (!isFollowing[msg.sender][addr]) {
+            following[msg.sender].push(addr);
+            isFollowing[msg.sender][addr] = true;
+            followingCount[msg.sender]++;
+        }
+    }
+
+    function listOfPost(address addr) public view returns (Post[] memory) {
+        return posts[addr];
+    }
+
+    function listOfMsg(address addr) public view returns (Message[] memory) {
+        return messages[addr];
+    }
+
+    function latestPost(address addr) public view returns (Post memory) {
+        return posts[addr][posts[addr].length - 1];
+    }
+}
